@@ -13,7 +13,7 @@ The satellite constellation’s operation is realistically simulated with the ai
 ## Implementation / Object Representations
 We created an object-oriented representation of the network topology by defining the InternetSatellite, Simulator, GroundNode, and Packet classes. An InternetSatellite instance primarily represents a single Starlink satellite’s physical state (ephemeris, orbital step), motion over time, and ultimately, a satellite node in the overall network topology. We initialized each InternetSatellite instance to correspond with a real Starlink satellite, complete with the real ID and ephemeris of that Starlink satellite. With the real ephemeris for each Starlink satellite, we used SGP4 and the poliastro library’s OrbitPlotter function to visualize the entire constellation’s path. The below example shows a 100-satellite Starlink constellation’s orbital paths around Earth (the overlapping colors are due to the fact that SpaceX positions rows of satellites offset on the exact same orbital path):
 
-<img width="962" alt="image" src="https://github.com/sidharthrajaram/starsim/assets/14987538/62513fa0-b8d0-4e69-89fb-0bd699b79190">
+<img width="962" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/orbit_viz.png?raw=true">
 
 GroundNode instances can be of two types: a ground terminal or a ground station. Ground terminals represent end users who are trying to connect to the internet; ground terminals are our “normal” nodes, which try to connect with the internet satellites. Ground stations represent the gateway for the Starlink satellites to connect to the internet. There are three types of routing—terminal to satellite, satellite to satellite, and satellite to station. GroundNodes are represented by their node_type and positional data.
 
@@ -23,7 +23,7 @@ Provided with lists of satellite objects, ground terminal objects, and ground st
 
 The edges are initialized with costs and capacities. The cost is defined as the Euclidean distance between two nodes. The capacity for an edge is sampled from a normal probability distribution with mean 20 Mbps and standard deviation 1 Mbps. This is based on average statistics of Starlink performance right now (Pekhterev). 
 
-<img width="921" alt="image" src="https://github.com/sidharthrajaram/starsim/assets/14987538/3a0ff019-6ee0-4f4b-ad7d-e5fc8df6551b">
+<img width="921" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/graph_viz.png?raw=true">
 
 ## Simulated Packet Flow 
 After creating the graph of the simulated network topology, we inject a stream of n Packet objects, each initialized with a source node ID, destination node ID, and size. Our simulator instance also facilitates the dynamic properties of our simulation, ensuring that the satellites’ orbital positions and packet “locations” update accordingly with each time step. 
@@ -34,18 +34,18 @@ At its core, FHRP makes use of the footprints of the satellites in the initial r
 
 Using the Simulator instance and the stream of Packet objects, we were able to generate simulated metrics for constellation and network performance. First, we were able to measure the number of packets that were dropped. Second, we created a novel metric based on our measurement of the total waiting time of packets called the Downtime Percentage and calculated as (time steps spent waiting by all packets) / (total time steps * total number of packets). This metric was our way of capturing the availability of the network, since a greater Downtime Percentage meant that packets spent a lot more time waiting at nodes, whether that be on the ground or on satellites. Another metric we measured was the number of intra-satellite hops, which we used to represent how the constellation was utilized.
 
-## Metrics and Analysis
+## Simulation and Analysis
 In order to address our original questions about satellite internet performance, we wanted to see how the performance characteristics of the network are affected by the LEO constellation’s size, i.e., the number of satellites. We initialized a simulated environment of 3 ground terminals, 1 ground station, and n Starlink satellites (where n=25, 50, 100). Sticking to our initial curiosity about Starlink performance in Ukraine, we decided to position ground terminals in points of interest in Ukraine (Kyiv Airport, a hospital in Kyiv, Odessa Airport, and a rural hospital in the middle of the country). We placed the ground station north of Kyiv. We simulated a flow of 10 packets from these ground terminals with 25, 50, and 100 Starlink satellites and produced the aforementioned metrics.
 
 **Below** is an example of a simulation using 100 randomly picked Starlink satellites with 10 randomly generated packets being transmitted from the aforementioned ground terminals in Ukraine. We begin with the initial step for all the packets being determined using current data, leading them to move to the closest satellite, which subsequently begins their routing calculations. Some of the packets are able to make it to their destination on the first try (e.g., Packet 61057…), but others have issues with link capacity constraints, lack of service, and range, forcing them to either wait at a satellite or be routed to another satellite and so on.
 
-<img width="670" alt="image" src="https://github.com/sidharthrajaram/starsim/assets/14987538/81bf734f-4881-47f5-9740-1019a1c37ea6">
+<img width="670" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/sim_run.png?raw=true">
 
 In this particular simulation, seven time steps were spent waiting at nodes across all packets. Since there were five total time steps and 10 total packets, this means the Downtime% was 7 / 50 = 14%. In this particular simulation, no packets were dropped, which means all packets were able to ultimately get to their destination, although some of the time some were waiting at nodes.
 
 ## Simulation Results and Findings
 Here are the average results we got across our trials of 25, 50, and 100 satellites:
 
-<img width="631" alt="image" src="https://github.com/sidharthrajaram/starsim/assets/14987538/7f3145fd-cdf4-4447-b14c-d4c3f0bfd4b4">
+<img width="631" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/results.png?raw=true">
 
 **Performance (both the number of packets successfully sent and the downtime) improves with the number of satellites in the LEO constellation. However, packet drop rates and downtime are affected differently.** We thought it was particularly interesting how downtime% decreased at a reduced rate when the constellation size was doubled from 50 to 100 versus when it was doubled from 25 to 50. These numbers are consistent with an exponential decrease in downtime as the number of satellites increases. We believe this is due to the unavoidable constraints of link capacity to a single satellite, because even with 100 satellites, there were still only 1-2 satellites serving the Ukraine region (note the same two satellites STARLINK-1589 and STARLINK-1022 used in all the packets’ first hop in the simulation output in the previous section). This would explain why the largest LEO internet satellite constellation providers are focusing on using sheer numbers to overcome these diminishing service quality improvements (e.g., Starlink’s fleet size is 3800 with an eventual goal of 42,000 satellites). 
