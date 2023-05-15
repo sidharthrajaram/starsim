@@ -1,4 +1,4 @@
-# Starsim 🛰 📡 💫 - A Simulation of LEO internet satellite constellations (i.e. Starlink)
+<img height="275" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/cover.png?raw=true">
 
 ##### This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023)
 
