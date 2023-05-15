@@ -1,4 +1,6 @@
-# Starsim: Simulation of LEO internet satellite constellations (i.e. Starlink)
+# Starsim 🛰 📡 💫 - A Simulation of LEO internet satellite constellations (i.e. Starlink)
+
+##### This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023)
 
 ## Introduction
 In order to better understand the performance considerations and requirements of LEO internet satellite constellations, we built a simulated model of the Starlink network, complete with real orbital data, ground stations, packet routing, and metrics generation. Specifically, we wanted to investigate how network performance (measured by packets dropped, downtime, and satellite utilization) changed with respect to the size of the LEO constellation (number of satellites). 
