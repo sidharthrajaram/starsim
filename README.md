@@ -1,6 +1,7 @@
 <img height="275" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/cover.png?raw=true">
 
-##### This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023)
+<b>  This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023) </b>
+##### Team: Sidharth Rajaram, Pranav Eranki, Sasha Sato, Nithila Poongovan
 
 ## Introduction
 In order to better understand the performance considerations and requirements of LEO internet satellite constellations, we built a simulated model of the Starlink network, complete with real orbital data, ground stations, packet routing, and metrics generation. Specifically, we wanted to investigate how network performance (measured by packets dropped, downtime, and satellite utilization) changed with respect to the size of the LEO constellation (number of satellites). 
