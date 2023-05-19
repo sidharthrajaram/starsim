@@ -1,6 +1,6 @@
 <img height="275" alt="image" src="https://github.com/sidharthrajaram/starsim/blob/main/cover.png?raw=true">
 
-<b>  This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023) </b>
+<b>  This project was originally made for UC Berkeley's EE122: Introduction to Communication Networks (Spring 2023). </b>
 ##### Team: Sidharth Rajaram, Pranav Eranki, Sasha Sato, Nithila Poongovan
 
 ## Introduction
